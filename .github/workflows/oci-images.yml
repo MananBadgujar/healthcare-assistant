@@ -29,9 +29,13 @@ jobs:
       - name: Make Maven wrapper executable
         run: chmod +x mvnw
 
+      - name: Generate CI JWT secret
+        run: |
+          jwt_secret="$(openssl rand -base64 32)"
+          echo "::add-mask::$jwt_secret"
+          echo "JWT_SECRET=$jwt_secret" >> "$GITHUB_ENV"
+
       - name: Package platform services
-        env:
-          JWT_SECRET: REMOVED_STATIC_CI_SECRET
         run: |
           ./mvnw -B -ntp -f platform/pom.xml package -DskipTests
 

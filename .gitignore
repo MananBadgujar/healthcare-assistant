@@ -137,3 +137,6 @@ update_kafka_config.py
 .factorypath
 build_all.bat
 src/main/resources/application_fixed.properties
+
+# Local Kubernetes JWT secret
+platform/k8s/jwt-secret.yaml
