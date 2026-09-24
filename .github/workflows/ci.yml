@@ -52,7 +52,9 @@ jobs:
 
       - name: Generate CI JWT secret
         run: |
-          echo "JWT_SECRET=$(openssl rand -base64 32)" >> "$GITHUB_ENV"
+          jwt_secret="$(openssl rand -base64 32)"
+          echo "::add-mask::$jwt_secret"
+          echo "JWT_SECRET=$jwt_secret" >> "$GITHUB_ENV"
 
       - name: Wait for Kafka
         run: |
@@ -76,6 +78,7 @@ jobs:
         run: |
           curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
           helm lint platform/helm/healthcare-platform
+          helm lint platform/helm/healthcare-platform             -f platform/helm/healthcare-platform/values-oci.yaml
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v4
