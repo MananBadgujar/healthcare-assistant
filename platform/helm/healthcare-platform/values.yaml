@@ -1,0 +1,107 @@
+namespace: healthcare
+
+jwtSecretName: jwt-secret
+
+imagePullPolicy: Never
+
+defaultReplicas: 1
+
+services:
+
+  - name: auth-service
+    image: localhost/platform-auth-service:latest
+    port: 8101
+    env:
+      KAFKA_BOOTSTRAP: kafka:9092
+
+  - name: patient-service
+    image: localhost/platform-patient-service:latest
+    port: 8102
+    env:
+      KAFKA_BOOTSTRAP: kafka:9092
+
+  - name: provider-service
+    image: localhost/platform-provider-service:latest
+    port: 8103
+    env:
+      KAFKA_BOOTSTRAP: kafka:9092
+
+  - name: appointment-service
+    image: localhost/platform-appointment-service:latest
+    port: 8104
+    env:
+      KAFKA_BOOTSTRAP: kafka:9092
+      PROVIDER_URL: http://provider-service:8103
+      PATIENT_URL: http://patient-service:8102
+
+  - name: medication-service
+    image: localhost/platform-medication-service:latest
+    port: 8105
+    env:
+      KAFKA_BOOTSTRAP: kafka:9092
+
+  - name: billing-service
+    image: localhost/platform-billing-service:latest
+    port: 8106
+    env:
+      KAFKA_BOOTSTRAP: kafka:9092
+
+  - name: ai-service
+    image: localhost/platform-ai-service:latest
+    port: 8107
+    env:
+      KAFKA_BOOTSTRAP: kafka:9092
+      RAG_URL: http://rag-service:8108
+      CDS_URL: http://cds-service:8109
+
+  - name: rag-service
+    image: localhost/platform-rag-service:latest
+    port: 8108
+    env:
+      KAFKA_BOOTSTRAP: kafka:9092
+
+  - name: cds-service
+    image: localhost/platform-cds-service:latest
+    port: 8109
+    env:
+      KAFKA_BOOTSTRAP: kafka:9092
+
+  - name: notification-service
+    image: localhost/platform-notification-service:latest
+    port: 8110
+    env:
+      KAFKA_BOOTSTRAP: kafka:9092
+
+  - name: inventory-service
+    image: localhost/platform-inventory-service:latest
+    port: 8111
+    env:
+      KAFKA_BOOTSTRAP: kafka:9092
+
+  - name: api-gateway
+    image: localhost/platform-api-gateway:latest
+    port: 8080
+    serviceType: NodePort
+    nodePort: 30080
+    env:
+      AUTH_URL: http://auth-service:8101
+      PATIENT_URL: http://patient-service:8102
+      PROVIDER_URL: http://provider-service:8103
+      APPOINTMENT_URL: http://appointment-service:8104
+      MEDICATION_URL: http://medication-service:8105
+      BILLING_URL: http://billing-service:8106
+      AI_URL: http://ai-service:8107
+      RAG_URL: http://rag-service:8108
+      CDS_URL: http://cds-service:8109
+      NOTIFICATION_URL: http://notification-service:8110
+      INVENTORY_URL: http://inventory-service:8111
+      MONOLITH_URL: http://monolith:8080
+
+kafka:
+  name: kafka
+  image: apache/kafka:3.8.0
+  replicas: 1
+  brokerPort: 9092
+  controllerPort: 9093
+  storage: 5Gi
+  imagePullPolicy: Never

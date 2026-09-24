@@ -1,0 +1,139 @@
+# =========================
+# Maven
+# =========================
+**/target/
+.mvn/timing.properties
+
+# =========================
+# Java / build artifacts
+# =========================
+*.class
+*.jar
+*.war
+
+# Keep Maven wrapper files tracked
+!.mvn/wrapper/**
+!mvnw
+!mvnw.cmd
+
+# =========================
+# IDE
+# =========================
+.idea/
+.vscode/
+*.iml
+.classpath
+.project
+.settings/
+
+# =========================
+# Logs / runtime output
+# =========================
+*.log
+*.out
+*.err
+logs/
+
+# =========================
+# Temporary files / scripts
+# =========================
+tmp/
+tmp_*/
+__pycache__/
+*.tmp
+*.swp
+*.pid
+
+# =========================
+# Local test/generated files
+# =========================
+performance/
+newman/
+data/
+ollama-models/
+apache-jmeter-*.zip
+
+# Local request/test artifacts
+*_req.json
+login.json
+register_*.json
+chat_req.json
+embed_req.json
+generate_req.json
+ingest_doc_req.json
+ask_req.json
+
+# Generated reports / outputs
+FINAL_ACCEPTANCE_REPORT.txt
+HEALTHCARE_ASSISTANT_API_TEST_REPORT.md
+current_state_report.md
+mvn-full-output.txt
+mvn-full2.txt
+mvn-verification-current.txt
+test-output*.txt
+test-result*.txt
+test-results.txt
+testout.txt
+output.txt
+startup.err
+gateway.err
+app.err
+auth-service-runtime.err
+patient-service-runtime.err
+
+# =========================
+# Phase 15 local backup/runtime
+# =========================
+backups/
+
+# =========================
+# Local Kubernetes/runtime
+# =========================
+.kube/
+*.tar
+*.tar.gz
+
+# =========================
+# OpenTelemetry downloaded agent
+# =========================
+**/otel/*.jar
+
+# =========================
+# Environment / secrets
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+
+# Local cloned observability Helm chart repositories
+platform/k8s/observability/loki-chart-18.13.5/
+platform/k8s/observability/tempo-chart/
+
+# Generated test artifacts
+test_files.csv
+test_results.txt
+test_output.txt
+test-full-results.txt
+test-gate-results.txt
+
+# Generated/debug artifacts
+test-final.txt
+test-full-results.txt
+test-gate-results.txt
+test_output.txt
+tmp_ConsumerTest.java
+tmp_consumer.properties
+tmp_test_kafka.py
+update_kafka_config.py
+
+# Legacy/local files
+%TEMLIST%
+.factorypath
+build_all.bat
+src/main/resources/application_fixed.properties

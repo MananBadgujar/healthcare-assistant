@@ -1,0 +1,186 @@
+# Phase 13 local microservices environment.
+# Usage:
+#   mvn -f platform/pom.xml package -DskipTests
+#   docker compose -f platform/docker-compose.yml up --build
+# Monolith (Phase 1-12) optionally runs on 8081 as fallback route target.
+
+services:
+
+  kafka:
+    image: apache/kafka:3.8.0
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093,PLAINTEXT_HOST://:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      CLUSTER_ID: healthcare-platform-v1
+
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092 >/dev/null 2>&1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      AUTH_URL: http://auth-service:8101
+      PATIENT_URL: http://patient-service:8102
+      PROVIDER_URL: http://provider-service:8103
+      APPOINTMENT_URL: http://appointment-service:8104
+      MEDICATION_URL: http://medication-service:8105
+      BILLING_URL: http://billing-service:8106
+      AI_URL: http://ai-service:8107
+      RAG_URL: http://rag-service:8108
+      CDS_URL: http://cds-service:8109
+      NOTIFICATION_URL: http://notification-service:8110
+      INVENTORY_URL: http://inventory-service:8111
+      MONOLITH_URL: http://monolith:8080
+    depends_on:
+      - auth-service
+      - patient-service
+      - appointment-service
+
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "8101:8101"
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      KAFKA_BOOTSTRAP: kafka:9092
+    depends_on:
+      kafka:
+        condition: service_started
+
+  patient-service:
+    build: ./patient-service
+    ports:
+      - "8102:8102"
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      KAFKA_BOOTSTRAP: kafka:9092
+    depends_on:
+      kafka:
+        condition: service_started
+
+  provider-service:
+    build: ./provider-service
+    ports:
+      - "8103:8103"
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      KAFKA_BOOTSTRAP: kafka:9092
+    depends_on:
+      kafka:
+        condition: service_started
+
+  appointment-service:
+    build: ./appointment-service
+    ports:
+      - "8104:8104"
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      KAFKA_BOOTSTRAP: kafka:9092
+      PROVIDER_URL: http://provider-service:8103
+      PATIENT_URL: http://patient-service:8102
+    depends_on:
+      kafka:
+        condition: service_started
+
+  medication-service:
+    build: ./medication-service
+    ports:
+      - "8105:8105"
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      KAFKA_BOOTSTRAP: kafka:9092
+    depends_on:
+      kafka:
+        condition: service_started
+
+  billing-service:
+    build: ./billing-service
+    ports:
+      - "8106:8106"
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      KAFKA_BOOTSTRAP: kafka:9092
+    depends_on:
+      kafka:
+        condition: service_started
+
+  ai-service:
+    build: ./ai-service
+    ports:
+      - "8107:8107"
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      KAFKA_BOOTSTRAP: kafka:9092
+      RAG_URL: http://rag-service:8108
+      CDS_URL: http://cds-service:8109
+    depends_on:
+      kafka:
+        condition: service_started
+
+  rag-service:
+    build: ./rag-service
+    ports:
+      - "8108:8108"
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      KAFKA_BOOTSTRAP: kafka:9092
+    depends_on:
+      kafka:
+        condition: service_started
+
+  cds-service:
+    build: ./cds-service
+    ports:
+      - "8109:8109"
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      KAFKA_BOOTSTRAP: kafka:9092
+    depends_on:
+      kafka:
+        condition: service_started
+
+  notification-service:
+    build: ./notification-service
+    ports:
+      - "8110:8110"
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      KAFKA_BOOTSTRAP: kafka:9092
+    depends_on:
+      kafka:
+        condition: service_started
+
+  inventory-service:
+    build: ./inventory-service
+    ports:
+      - "8111:8111"
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      KAFKA_BOOTSTRAP: kafka:9092
+    depends_on:
+      kafka:
+        condition: service_started
+
+volumes:
+  kafka_data:
