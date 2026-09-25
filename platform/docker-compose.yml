@@ -39,7 +39,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      JWT_SECRET: ${JWT_SECRET}
       AUTH_URL: http://auth-service:8101
       PATIENT_URL: http://patient-service:8102
       PROVIDER_URL: http://provider-service:8103
@@ -62,7 +62,7 @@ services:
     ports:
       - "8101:8101"
     environment:
-      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      JWT_SECRET: ${JWT_SECRET}
       KAFKA_BOOTSTRAP: kafka:9092
     depends_on:
       kafka:
@@ -73,7 +73,7 @@ services:
     ports:
       - "8102:8102"
     environment:
-      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      JWT_SECRET: ${JWT_SECRET}
       KAFKA_BOOTSTRAP: kafka:9092
     depends_on:
       kafka:
@@ -84,7 +84,7 @@ services:
     ports:
       - "8103:8103"
     environment:
-      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      JWT_SECRET: ${JWT_SECRET}
       KAFKA_BOOTSTRAP: kafka:9092
     depends_on:
       kafka:
@@ -95,7 +95,7 @@ services:
     ports:
       - "8104:8104"
     environment:
-      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      JWT_SECRET: ${JWT_SECRET}
       KAFKA_BOOTSTRAP: kafka:9092
       PROVIDER_URL: http://provider-service:8103
       PATIENT_URL: http://patient-service:8102
@@ -108,7 +108,7 @@ services:
     ports:
       - "8105:8105"
     environment:
-      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      JWT_SECRET: ${JWT_SECRET}
       KAFKA_BOOTSTRAP: kafka:9092
     depends_on:
       kafka:
@@ -119,7 +119,7 @@ services:
     ports:
       - "8106:8106"
     environment:
-      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      JWT_SECRET: ${JWT_SECRET}
       KAFKA_BOOTSTRAP: kafka:9092
     depends_on:
       kafka:
@@ -130,7 +130,7 @@ services:
     ports:
       - "8107:8107"
     environment:
-      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      JWT_SECRET: ${JWT_SECRET}
       KAFKA_BOOTSTRAP: kafka:9092
       RAG_URL: http://rag-service:8108
       CDS_URL: http://cds-service:8109
@@ -143,7 +143,7 @@ services:
     ports:
       - "8108:8108"
     environment:
-      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      JWT_SECRET: ${JWT_SECRET}
       KAFKA_BOOTSTRAP: kafka:9092
     depends_on:
       kafka:
@@ -154,7 +154,7 @@ services:
     ports:
       - "8109:8109"
     environment:
-      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      JWT_SECRET: ${JWT_SECRET}
       KAFKA_BOOTSTRAP: kafka:9092
     depends_on:
       kafka:
@@ -165,7 +165,7 @@ services:
     ports:
       - "8110:8110"
     environment:
-      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      JWT_SECRET: ${JWT_SECRET}
       KAFKA_BOOTSTRAP: kafka:9092
     depends_on:
       kafka:
@@ -176,7 +176,7 @@ services:
     ports:
       - "8111:8111"
     environment:
-      JWT_SECRET: ${JWT_SECRET:-REDACTED}
+      JWT_SECRET: ${JWT_SECRET}
       KAFKA_BOOTSTRAP: kafka:9092
     depends_on:
       kafka:

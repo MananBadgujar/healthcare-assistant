@@ -67,7 +67,11 @@ class KafkaIntegrationTest {
         registry.add("rag.generation.fallback-on-llm-error", () -> "true");
         registry.add("ai.ollama.base-url", () -> "http://localhost:11434");
         registry.add("ai.ollama.model", () -> "llama2");
-        registry.add("jwt.secret", () -> "REDACTED");
+        registry.add(
+                "jwt.secret",
+                () -> java.util.UUID.randomUUID().toString()
+                        + java.util.UUID.randomUUID().toString()
+        );
         registry.add("spring.security.csrf.enabled", () -> "false");
         registry.add("kafka.topics.patient.created", () -> "healthcare.patient.events.created");
         registry.add("kafka.topics.patient.updated", () -> "healthcare.patient.events.updated");
